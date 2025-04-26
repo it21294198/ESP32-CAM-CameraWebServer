@@ -101,31 +101,6 @@ static esp_err_t index_handler(httpd_req_t *req){
     return httpd_resp_send(req, response, strlen(response));
 }
 
-void startCameraServer(){
-    httpd_config_t config = HTTPD_DEFAULT_CONFIG();
-    config.server_port = 80;
-
-    httpd_uri_t index_uri = {
-        .uri       = "/",
-        .method    = HTTP_GET,
-        .handler   = index_handler,
-        .user_ctx  = NULL
-    };
-
-    httpd_uri_t stream_uri = {
-        .uri       = "/stream",
-        .method    = HTTP_GET,
-        .handler   = stream_handler,
-        .user_ctx  = NULL
-    };
-    
-    Serial.printf("Starting web server on port: '%d'\n", config.server_port);
-    if (httpd_start(&camera_httpd, &config) == ESP_OK) {
-        httpd_register_uri_handler(camera_httpd, &index_uri);
-        httpd_register_uri_handler(camera_httpd, &stream_uri);
-    }
-}
-
 void setupLedFlash(int pin) {
     pinMode(pin, OUTPUT);
     digitalWrite(pin, LOW);
